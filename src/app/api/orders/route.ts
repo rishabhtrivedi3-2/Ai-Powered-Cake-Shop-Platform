@@ -8,18 +8,20 @@ export async function POST(req: Request) {
     if (!session?.user) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-    const { items ,total} = await req.json();
+    const { items, total, userId } = await req.json();
     // const total = items.reduce((sum: number, i: any) => sum + items.price * i.quantity, 0)
 
     const order = await prisma.order.create({
         data: {
             userId: session.user.id,
             total: total,
+            email: session.user.email || '',
             items: {
                 create: items.map((item: any) => ({
                     productId: item.productId,
                     quantity: item.quantity,
                     price: item.price,
+
                 }))
             }
         }
@@ -44,6 +46,6 @@ export async function GET() {
         return NextResponse.json({ orders }, { status: 200 });
     } catch (error) {
 
-        return NextResponse.json({error: error}, { status: 500 });
+        return NextResponse.json({ error: error }, { status: 500 });
     }
 }

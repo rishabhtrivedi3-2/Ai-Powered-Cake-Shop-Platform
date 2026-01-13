@@ -34,6 +34,7 @@ model Order {
   user   User        @relation(fields: [userId], references: [id])
   items  OrderItem[]
   total  Float
+  email  String?
   status OrderStatus @default(PENDING)
 
   createdAt DateTime @default(now())
@@ -48,6 +49,23 @@ model OrderItem {
 
   quantity Int
   price    Float
+}
+model customCakeRequest {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId        String
+  prompt        String
+  aiImage       String?
+  expectedPrice Float?
+  finalPrice    Float?
+  status        CustomCakeStatus @default(PENDING)
+  adminNote     String?
+  createdAt     DateTime @default(now())
+}
+
+enum CustomCakeStatus {
+  PENDING
+  APPROVED
+  REJECTED
 }
 
 enum OrderStatus {

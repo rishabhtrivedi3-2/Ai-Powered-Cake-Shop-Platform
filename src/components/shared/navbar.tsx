@@ -9,8 +9,7 @@ import { logoutAction } from '@/actions/auth-actions'
 import { LogoutButton } from '../logout-button'
 import { ShoppingCart } from 'lucide-react'
 import CheckoutPage from '@/app/checkout/page'
-
-
+import { Sparkles } from "lucide-react"
 export function Navbar () {
   const { data: session, status } = useSession()
 
@@ -33,15 +32,27 @@ export function Navbar () {
               <LogoutButton />
             </>
           ) : (
-            <Link href='/login'>
-              <Button>Login</Button>
-            </Link>
+            <>
+              <Link href='/login'>
+                <Button>Login</Button>
+              </Link>
+            </>
           )}
 
-          {status == 'authenticated' && session?.user.role!=="ADMIN" ? (
-                  <CheckoutPage/>
-
-          ) : (<div></div>
+          {status == 'authenticated' && session?.user.role !== 'ADMIN' ? (
+            <>
+              <Link href='/ai-cake'>
+                <div className='ai-button-container shadow-lg shadow-purple-500/20'>
+                  <div className='ai-button-inner'>
+                    <Sparkles className='w-4 h-4 text-purple-600 animate-pulse' />
+                    <span>Made with AI</span>
+                  </div>
+                </div>
+              </Link>
+              <CheckoutPage />
+            </>
+          ) : (
+            <div></div>
             // <Link href='/register'>
             //   <Button>Register</Button>
             // </Link>

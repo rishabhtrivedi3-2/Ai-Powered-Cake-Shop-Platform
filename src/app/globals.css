@@ -45,7 +45,42 @@
   --radius-3xl: calc(var(--radius) + 12px);
   --radius-4xl: calc(var(--radius) + 16px);
 }
+@property --gradient-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
 
+@keyframes rotation {
+  0% { --gradient-angle: 0deg; }
+  100% { --gradient-angle: 360deg; }
+}
+
+.ai-button-container {
+  background: linear-gradient(var(--gradient-angle), #4facfe, #00f2fe, #a8edea, #fbc2eb, #a18cd1);
+  animation: rotation 3s linear infinite;
+  position: relative;
+  padding: 2px; /* This is your border width */
+  border-radius: 12px;
+  display: inline-block;
+  transition: transform 0.2s ease;
+}
+
+.ai-button-container:hover {
+  transform: scale(1.05);
+}
+
+.ai-button-inner {
+  background: white;
+  color: black;
+  padding: 8px 9px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  z-index: 2;
+}
 :root {
   --radius: 0.625rem;
   --background: oklch(1 0 0);

@@ -1,87 +1,131 @@
 import { auth } from '@/auth'
+import { prisma } from '@/lib/prisma' // Direct DB access
 import OrderStatusSelect from '@/components/OrderStatusSelect'
+import CustomCakeStatusSelect from '@/components/CustomCakeStatusSelect' // We'll create this
 import { redirect } from 'next/navigation'
+import { Sparkles, ClipboardList } from 'lucide-react'
 
 export default async function AdminOrdersPage() {
   const session = await auth()
-  if (session?.user.role !== 'ADMIN') {
-    redirect('/')
-  }
-  const res = await fetch(`${process.env.NEXTAUTH_URL}/api/admin/orders`, {
-    cache: 'no-store',
-  })
-  const orders = await res.json()
+  if (session?.user.role !== 'ADMIN') redirect('/')
 
-  const statusColors: { [key: string]: string } = {
+  // Fetch standard orders
+  const orders = await prisma.order.findMany({
+    orderBy: { createdAt: 'desc' },
+  })
+
+  // Fetch AI Custom Cake requests
+  const customCakes = await prisma.customCakeRequest.findMany({
+    orderBy: { createdAt: 'desc' },
+  })
+
+  const statusColors: any = {
     PENDING: 'bg-yellow-100 text-yellow-800 border-yellow-200',
     CONFIRMED: 'bg-green-100 text-green-800 border-green-200',
+    APPROVED: 'bg-purple-100 text-purple-800 border-purple-200',
+    REJECTED: 'bg-red-100 text-red-800 border-red-200',
     BAKING: 'bg-orange-100 text-orange-800 border-orange-200',
-    SHIPPED: 'bg-blue-100 text-blue-800 border-blue-200',
-    DELIVERED: 'bg-gray-100 text-gray-800 border-gray-200',
-    CANCELLED: 'bg-red-100 text-red-800 border-red-200',
   }
 
   return (
-    <div className='min-h-screen bg-gradient-to-b from-slate-50 to-white'>
-      {/* Header */}
+    <div className='min-h-screen bg-slate-50'>
       <div className='bg-white border-b border-slate-200 sticky top-0 z-40'>
         <div className='max-w-7xl mx-auto px-6 py-8'>
-          <h1 className='text-4xl font-bold text-gray-900'>📋 Order Management</h1>
-          <p className='text-gray-600 mt-2'>Total Orders: {orders.order?.length || 0}</p>
+          <h1 className='text-4xl font-bold text-gray-900'>📋 Admin Dashboard</h1>
+          <div className='flex gap-4 mt-4'>
+            <p className='text-gray-600 font-medium flex items-center gap-2'>
+              <ClipboardList className='w-4 h-4' /> Standard: {orders.length}
+            </p>
+            <p className='text-purple-600 font-medium flex items-center gap-2'>
+              <Sparkles className='w-4 h-4' /> AI Requests: {customCakes.length}
+            </p>
+          </div>
         </div>
       </div>
 
-      {/* Orders List */}
-      <div className='max-w-7xl mx-auto px-6 py-12'>
-        {!orders.order || orders.order.length === 0 ? (
-          <div className='text-center py-20'>
-            <p className='text-xl text-gray-500'>No orders found.</p>
-          </div>
-        ) : (
+      <div className='max-w-7xl mx-auto px-6 py-12 space-y-12'>
+        
+        {/* --- SECTION 1: AI CUSTOM CAKE REQUESTS --- */}
+        <section>
+          <h2 className='text-xl font-bold mb-6 flex items-center gap-2 text-purple-700'>
+            <Sparkles className='w-5 h-5' /> New AI Custom Requests
+          </h2>
           <div className='space-y-6'>
-            {orders.order.map((order: any, idx: number) => (
-              <div
-                key={order.id}
-                className='bg-white rounded-xl border border-slate-200 overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1 animate-fadeIn'
-                style={{ animationDelay: `${idx * 50}ms` }}
-              >
-                <div className='p-6 border-b border-slate-100'>
-                  <div className='flex flex-col md:flex-row md:items-center md:justify-between gap-4'>
-                    <div>
-                      <p className='text-sm text-gray-500'>Order ID</p>
-                      <p className='text-lg font-bold text-gray-900'>#{order.id.slice(0, 8)}</p>
+            {customCakes.map((cake: any) => (
+              <div key={cake.id} className='bg-white rounded-xl border-2 border-purple-100 overflow-hidden shadow-sm'>
+                <div className='p-6 border-b border-slate-100 flex flex-col md:flex-row gap-6'>
+                  <div className='w-32 h-32 rounded-lg border overflow-hidden bg-slate-50 shrink-0'>
+                    {cake.aiImage && <img src={cake.aiImage} className='w-full h-full object-cover' alt='AI Preview' />}
+                  </div>
+                  <div className='flex-1'>
+                    <div className='flex justify-between items-start'>
+                      <div>
+                        <p className='text-xs font-bold text-purple-500 uppercase tracking-wider'>AI Design Request</p>
+                        <p className='text-sm text-gray-500 italic mt-1'>"{cake.prompt}"</p>
+                      </div>
+                      <div className='text-right'>
+                        <p className='text-sm text-gray-500'>Customer Budget</p>
+                        <p className='text-xl font-bold text-gray-900'>₹{cake.expectedPrice}</p>
+                      </div>
+                      {cake.finalPrice !=null &&
+                      <div className='text-right'>
+                        <p className='text-sm text-gray-500'>FinalPrice</p>
+                        <p className='text-xl font-bold text-gray-900'>₹{cake.finalPrice}</p>
+                      </div>
+                      }
                     </div>
-                    <div>
-                      <p className='text-sm text-gray-500'>Customer Email</p>
-                      <p className='text-lg font-semibold text-gray-900'>{order.email}</p>
-                    </div>
-                    <div className='text-right'>
-                      <p className='text-sm text-gray-500'>Total Amount</p>
-                      <p className='text-2xl font-bold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent'>
-                        ₹{order.total}
-                      </p>
+                    <div className='mt-6 grid grid-cols-1 md:grid-cols-2 gap-6 items-end'>
+                      <div>
+                        <p className='text-sm text-gray-500 mb-2'>Request Status</p>
+                        <span className={`px-4 py-2 rounded-lg font-semibold border ${statusColors[cake.status]}`}>
+                          {cake.status}
+                        </span>
+                      </div>
+                      <div>
+                        <p className='text-sm text-gray-500 mb-2'>Update Design Status</p>
+                        <CustomCakeStatusSelect currentStatus={cake.status} requestId={cake.id} price={cake.expectedPrice}/>
+                      </div>
                     </div>
                   </div>
                 </div>
+              </div>
+            ))}
+          </div>
+        </section>
 
+        {/* --- SECTION 2: STANDARD ORDERS --- */}
+        <section>
+          <h2 className='text-xl font-bold mb-6 flex items-center gap-2 text-gray-700'>
+            <ClipboardList className='w-5 h-5' /> Standard Shop Orders
+          </h2>
+          <div className='space-y-6'>
+            {orders.map((order: any) => (
+              <div key={order.id} className='bg-white rounded-xl border border-slate-200 overflow-hidden'>
+                <div className='p-6 border-b border-slate-100 flex flex-col md:flex-row md:items-center md:justify-between gap-4'>
+                  <div>
+                    <p className='text-sm text-gray-500'>Order ID</p>
+                    <p className='text-lg font-bold text-gray-900'>#{order.id.slice(-8)}</p>
+                  </div>
+                  <div className='text-right'>
+                    <p className='text-sm text-gray-500'>Total Amount</p>
+                    <p className='text-2xl font-bold text-amber-600'>₹{order.total}</p>
+                  </div>
+                </div>
                 <div className='p-6 flex flex-col md:flex-row md:items-center md:justify-between gap-6'>
                   <div>
-                    <p className='text-sm text-gray-500 mb-2'>Current Status</p>
                     <span className={`inline-block px-4 py-2 rounded-lg font-semibold border ${statusColors[order.status]}`}>
                       {order.status}
                     </span>
                   </div>
-                  <div className='flex-1'>
-                    <p className='text-sm text-gray-500 mb-2'>Update Status</p>
+                  <div className='flex-1 max-w-xs'>
                     <OrderStatusSelect currentStatus={order.status} orderId={order.id} />
                   </div>
                 </div>
               </div>
             ))}
           </div>
-        )}
+        </section>
       </div>
-
     </div>
   )
 }

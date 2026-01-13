@@ -15,15 +15,16 @@ import {
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Separator } from '@/components/ui/separator'
 import { Badge } from '@/components/ui/badge'
+import { useSession } from 'next-auth/react'
 export default function CheckoutPage () {
-  const { items,total, clearCart, updateQuantity, removeItem } = useCart()
+  const { items, total, clearCart, updateQuantity, removeItem } = useCart()
   const router = useRouter()
-
+  const { data: session } = useSession()
   async function placeOrder () {
     const res = await fetch('/api/orders', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ items, total })
+      body: JSON.stringify({ items, total, userId: session?.user?.id })
     })
 
     if (res.ok) {
@@ -128,7 +129,9 @@ export default function CheckoutPage () {
                 <span>₹{total}</span>
               </div>
               <SheetFooter>
-                <Button className='w-full' onClick={placeOrder}>Proceed to Checkout</Button>
+                <Button className='w-full' onClick={placeOrder}>
+                  Proceed to Checkout
+                </Button>
               </SheetFooter>
             </div>
           </>
