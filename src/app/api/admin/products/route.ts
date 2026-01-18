@@ -15,21 +15,33 @@ export async function GET() {
   return NextResponse.json(products)
 }
 
-
 export async function POST(req: Request) {
   const session = await auth()
+
   if (session?.user.role !== "ADMIN") {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   }
 
-  const body = await req.json()
+  const formData = await req.formData()
+
+  const name = formData.get("name") as string
+  const price = Number(formData.get("price"))
+  const description = formData.get("description") as string
+  const imageFile = formData.get("image") as File | null
+
+  let imageUrl: string | null = null
+
+  if (imageFile) {
+    const buffer = Buffer.from(await imageFile.arrayBuffer())
+    imageUrl = `data:${imageFile.type};base64,${buffer.toString("base64")}`
+  }
 
   const product = await prisma.product.create({
     data: {
-      name: body.name,
-      price: body.price,
-      description: body.description,
-      image: body.image,
+      name,
+      price,
+      description,
+      image: imageUrl,
     },
   })
 

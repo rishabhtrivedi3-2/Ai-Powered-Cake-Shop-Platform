@@ -12,7 +12,9 @@ export async function POST(req: Request) {
             userId:session.user.id,
             prompt:body.prompt,
             aiImage:body.aiImage,
-            expectedPrice:body.expectedPrice
+            expectedPrice:body.expectedPrice,
+            productId: body.productId,
+            
 
         },
     })

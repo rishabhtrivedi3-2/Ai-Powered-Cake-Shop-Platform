@@ -15,6 +15,7 @@ export async function PATCH(req: Request, { params }: any) {
       finalPrice: body.finalPrice,
       status: "APPROVED",
       adminNote: body.note,
+
     },
   })
 

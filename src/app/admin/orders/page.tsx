@@ -11,11 +11,15 @@ export default async function AdminOrdersPage() {
 
   // Fetch standard orders
   const orders = await prisma.order.findMany({
+    include:{
+      items:{include:{product:true}}
+    },
     orderBy: { createdAt: 'desc' },
   })
 
   // Fetch AI Custom Cake requests
   const customCakes = await prisma.customCakeRequest.findMany({
+    
     orderBy: { createdAt: 'desc' },
   })
 
@@ -106,6 +110,11 @@ export default async function AdminOrdersPage() {
                     <p className='text-sm text-gray-500'>Order ID</p>
                     <p className='text-lg font-bold text-gray-900'>#{order.id.slice(-8)}</p>
                   </div>
+                  <div>
+                    <p className='text-sm text-gray-500'>User Email</p>
+                    <p className='text-lg font-bold text-gray-900'>{order.email}</p>
+                  </div>
+                  
                   <div className='text-right'>
                     <p className='text-sm text-gray-500'>Total Amount</p>
                     <p className='text-2xl font-bold text-amber-600'>₹{order.total}</p>
@@ -113,6 +122,13 @@ export default async function AdminOrdersPage() {
                 </div>
                 <div className='p-6 flex flex-col md:flex-row md:items-center md:justify-between gap-6'>
                   <div>
+                    <p className='text-sm text-gray-500'>quantity</p>
+                    {order.items && order.items.map((item: any) => (
+                      <div key={item.id} className='flex justify-between items-center mb-2'>
+                    <div>
+                    <p className='text-md  text-gray-900'>{item.quantity} x <span>{item.product?.name}</span></p>
+                  </div>
+                  </div>))}
                     <span className={`inline-block px-4 py-2 rounded-lg font-semibold border ${statusColors[order.status]}`}>
                       {order.status}
                     </span>

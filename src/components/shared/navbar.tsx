@@ -52,10 +52,10 @@ export function Navbar () {
               <CheckoutPage />
             </>
           ) : (
-            <div></div>
-            // <Link href='/register'>
-            //   <Button>Register</Button>
-            // </Link>
+            <Link href="/register">
+              <Button variant="default" size="sm">
+        Create Account
+      </Button></Link>
           )}
         </nav>
       </div>

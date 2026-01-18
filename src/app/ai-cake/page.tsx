@@ -1,6 +1,7 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -11,6 +12,15 @@ import {
   DialogTitle,
   DialogTrigger
 } from '@/components/ui/dialog'
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue
+} from '@/components/ui/select'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
@@ -21,10 +31,28 @@ import { cn } from '@/lib/utils'
 export default function AICakePage () {
   const [prompt, setPrompt] = useState('')
   const [price, setPrice] = useState('')
+  const [products, setProducts] = useState<any[]>([])
+  const [selectedProductId, setSelectedProductId] = useState<string>('')
   const [image, setImage] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const [open, setOpen] = useState(false)
-
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const ProductRes = await fetch('/api/products', {
+          method: 'GET'
+        })
+        if (ProductRes.ok) {
+          const data = await ProductRes.json()
+          setProducts(data)
+        }
+      } catch (error) {
+        return error
+      }
+    }
+    fetchProducts()
+  }, [])
+  console.log(selectedProductId);
   async function generateAICake () {
     setLoading(true)
     setImage(null) // Reset image to show loading state
@@ -39,27 +67,29 @@ export default function AICakePage () {
       setLoading(false)
     }
   }
+
   async function submitRequest () {
     await fetch('/api/custom-cakes', {
       method: 'POST',
 
       body: JSON.stringify({
         prompt,
-
+        name:selectedProductId,
         expectedPrice: Number(price),
+        productId:selectedProductId,
 
         aiImage: image
       })
     })
 
-    setOpen(false) // Close dialog on success
+    setOpen(false)
   }
   return (
     <div className='flex items-center justify-center min-h-screen'>
       {/* Full Screen AI Glow - only visible when loading */}
       <div
         className={cn(
-          'fixed inset-0 pointer-events-none z-[60] transition-opacity duration-500 rounded-none',
+          'fixed inset-0 pointer-events-none z-60 transition-opacity duration-500 rounded-none',
           loading
             ? 'opacity-100 animate-siri-glow border-[6px] border-purple-500/20'
             : 'opacity-0'
@@ -91,6 +121,23 @@ export default function AICakePage () {
               />
             </div>
 
+           <div className='grid gap-2'>
+        <Label>Base Cake Flavor</Label>
+        <Select onValueChange={(value) => setSelectedProductId(value)}>
+          <SelectTrigger className='w-full'>
+            <SelectValue placeholder='Select a flavor' />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              {products && products.map((product) => (
+                <SelectItem key={product.id} value={product.id}>
+                  {product.name} (Base Price: ₹{product.price})
+                </SelectItem>
+              ))}
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+      </div>
             <div className='grid gap-2'>
               <Label>Your Budget (₹)</Label>
               <Input

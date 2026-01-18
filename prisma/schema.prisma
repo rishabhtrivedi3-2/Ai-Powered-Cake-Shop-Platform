@@ -16,6 +16,7 @@ model User {
   role      Role     @default(USER)
   createdAt DateTime @default(now())
   Order     Order[]
+  customCakeRequests customCakeRequest[] 
 }
 
 model Product {
@@ -26,6 +27,7 @@ model Product {
   image       String?
   createdAt   DateTime    @default(now())
   OrderItem   OrderItem[]
+  customCakeRequests customCakeRequest[] 
 }
 
 model Order {
@@ -53,7 +55,11 @@ model OrderItem {
 model customCakeRequest {
   id            String   @id @default(auto()) @map("_id") @db.ObjectId
   userId        String
+  user          User             @relation(fields: [userId], references: [id])
+  productId     String?          @db.ObjectId
+  baseProduct   Product?         @relation(fields: [productId], references: [id])
   prompt        String
+  cakeName      String?
   aiImage       String?
   expectedPrice Float?
   finalPrice    Float?

@@ -3,6 +3,8 @@ import { useSession, signIn } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import { useEffect } from "react"
 import { Button } from '@/components/ui/button'
+import RegisterPage from "../register/page"
+import { Link } from "lucide-react"
 
 export default function LoginPage () {
     const { data: session, status } = useSession()
@@ -18,10 +20,18 @@ console.log("Session:", session);
   // if (status === "loading") return null
 
   return (
+    <>
+    
     <div className='flex min-h-screen items-center justify-center'>
       <Button onClick={() => signIn('google', { callbackUrl: '/' })}>
         Sign in with Google
       </Button>
     </div>
+    <Button>
+
+    <Link href="/register">Don't have an account? Register</Link>
+    </Button>
+
+    </>
   )
 }

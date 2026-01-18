@@ -17,6 +17,7 @@ export default async function CakesPage () {
             id={product.id}
             name={product.name}
             price={product.price} 
+            image={product.image}
             
           />
         ))}
