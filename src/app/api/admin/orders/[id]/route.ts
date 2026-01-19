@@ -4,7 +4,7 @@ import { auth } from "@/auth";
 import { error } from "console";
 export async function PATCH(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
     const session = await auth();
     const resolvedParams=await params;
@@ -12,13 +12,13 @@ export async function PATCH(
   if (session?.user.role !== "ADMIN") {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   }
-
-  const { status } = await req.json()
+const body = await req.json();
+    const { status } = body;
   console.log(status);
   try{
-
+    const {id}=await params;
     const order = await prisma.order.update({
-      where: { id: resolvedParams.id },
+      where: { id},
       data: { status },
     })
     return NextResponse.json(order)

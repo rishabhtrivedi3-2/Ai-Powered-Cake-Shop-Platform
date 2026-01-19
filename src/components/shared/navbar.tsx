@@ -3,9 +3,7 @@
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { useSession } from 'next-auth/react'
-import { signOut } from '@/auth'
-import { LogOutPage } from '@/app/(auth)/logout/page'
-import { logoutAction } from '@/actions/auth-actions'
+
 import { LogoutButton } from '../logout-button'
 import { ShoppingCart } from 'lucide-react'
 import CheckoutPage from '@/app/checkout/page'

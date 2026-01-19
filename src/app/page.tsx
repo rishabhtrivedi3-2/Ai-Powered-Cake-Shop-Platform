@@ -1,3 +1,5 @@
+//add
+import 'server-only'
 import { CakeCard } from '@/components/shared/cake-card'
 import { prisma } from '@/lib/prisma'
 import { auth } from '@/auth'

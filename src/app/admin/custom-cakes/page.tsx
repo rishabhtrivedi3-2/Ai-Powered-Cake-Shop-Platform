@@ -1,10 +1,10 @@
 import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
-
+import { redirect } from 'next/navigation'
 export default async function CustomCakesAdminPage () {
   const session = await auth()
   if (!session?.user) {
-    return new Response('Unauthorized', { status: 401 })
+    redirect('/login')
   }
   const data = await prisma.customCakeRequest.findMany({
     where: { userId: session.user.id },

@@ -3,7 +3,7 @@ import { prisma } from "@/lib/prisma"
 import { auth } from "@/auth";
 export async function PATCH(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const session = await auth()
 
@@ -42,14 +42,26 @@ export async function PATCH(
 
 }
 }
-export async function DELETE(req:Request,params:{params:{id:string}}){
-    const session=await auth();
-    const { id } = await params.params
-    if (session?.user.role!=="ADMIN"){
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-    }
-    const product=await prisma.product.delete({
-        where:{id:id}
-    })
-    return NextResponse.json({product},{status:200})
+export async function DELETE(
+  req: Request,
+  { params }: { params: Promise<{ id: string }> } // Fixed: must be a Promise in Next.js 15
+) {
+  const session = await auth();
+
+  if (session?.user.role !== "ADMIN") {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  try {
+    const { id } = await params; // Unwrap params
+
+    const product = await prisma.product.delete({
+      where: { id }
+    });
+
+    return NextResponse.json({ message: "Product deleted", product }, { status: 200 });
+  } catch (err) {
+    console.error("[PRODUCT_DELETE]", err);
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+  }
 }
