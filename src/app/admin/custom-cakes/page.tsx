@@ -2,7 +2,7 @@ export const dynamic = 'force-dynamic';
 
 // Rest of your imports...
 
-import { auth } from '@/lib/auth'
+import { auth } from '@/auth.server'
 import { prisma } from '@/lib/prisma'
 import { redirect } from 'next/navigation'
 export default async function CustomCakesAdminPage () {

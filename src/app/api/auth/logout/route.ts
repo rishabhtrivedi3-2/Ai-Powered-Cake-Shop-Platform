@@ -1,4 +1,4 @@
-import { signOut } from "@/auth";
+import { signOut } from "@/auth.client";
 import { request } from "http";
 import { NextResponse } from "next/server";
 
