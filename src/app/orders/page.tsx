@@ -25,7 +25,13 @@ export default async function OrdersPage ({
     currentFilter === 'custom'
       ? []
       : await prisma.order.findMany({
-          where: { userId: session.user.id },
+          where: { userId: session.user.id ,
+            NOT: {
+      email: {
+      not: null as any,         // Also skip empty strings if any
+    } // MongoDB specific check for missing fields
+    }
+          },
           include: { items: { include: { product: true } } },
           orderBy: { createdAt: 'desc' }
         })
