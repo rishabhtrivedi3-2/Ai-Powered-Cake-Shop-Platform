@@ -19,9 +19,9 @@ const body = await req.json();
     const {id}=await params;
     const order = await prisma.order.update({
       where: { id},
-      data: { status },
+      data: {  status },
     })
-    return NextResponse.json(order)
+    return NextResponse.json({order},{status:200})
   }catch(err){
     return NextResponse.json({error:err}, { status: 500 });
   }

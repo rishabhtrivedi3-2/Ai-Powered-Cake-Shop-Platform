@@ -11,7 +11,9 @@ export default async function CakesPage () {
         <p>No products available.</p>
       ) : (
         <>
-        {products.map((product) => (
+        {products.map((product
+          :any
+        ) => (
           <CakeCard 
             key={product.id} 
             id={product.id}

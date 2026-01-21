@@ -19,7 +19,7 @@ export default function NewProductPage () {
 
       if (res.ok) {
         alert('Product added successfully')
-        e.currentTarget.reset()
+        
       } else {
         alert('Failed to add product')
       }

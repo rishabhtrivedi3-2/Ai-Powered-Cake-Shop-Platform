@@ -35,10 +35,10 @@ export async function GET() {
         if (!session?.user) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
         }
-        // else if (session?.user.role === "USER") {
-        //     return NextResponse.json({ message: "user" }, { status: 200 })
+        else if (session?.user.role === "USER") {
+            return NextResponse.json({ message: "user" }, { status: 200 })
 
-        // }
+        }
         const orders = await prisma.order.findMany({
             where: { userId: session.user.id },
             include: { items: { include: { product: true } } }
