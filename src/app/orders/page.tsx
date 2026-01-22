@@ -26,16 +26,12 @@ export default async function OrdersPage ({
       ? []
       : await prisma.order.findMany({
           where: { userId: session.user.id ,
-            NOT: {
-      email: {
-      not: null as any,         // Also skip empty strings if any
-    } // MongoDB specific check for missing fields
-    }
+
           },
           include: { items: { include: { product: true } } },
           orderBy: { createdAt: 'desc' }
         })
-
+console.log(standardOrders);
   // 3. Fetch AI Custom Cake requests
   const customRequests =
     currentFilter === 'standard'
@@ -52,7 +48,7 @@ export default async function OrdersPage ({
     APPROVED: 'bg-purple-100 text-purple-700 border-purple-200',
     SHIPPED: 'bg-fuchsia-600 text-purple-700 border-fuchsia-200',
     CANCELLED: 'bg-orange-100 text-orange-700 border-orange-200',
-    DELIVERED: 'bg-blue-100 text-red-700 border-blue-200',
+    DELIVERED: 'bg-blue-100 text-blue-700 border-blue-200',
     BAKING: 'bg-orange-100 text-orange-700 border-orange-200'
   }
 
@@ -154,46 +150,55 @@ export default async function OrdersPage ({
             </div>
           </div>
         ))}
+{/* Render Standard Orders */}
+{standardOrders.map((order: any) => (
+  <div
+    key={order.id}
+    className='bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm'
+  >
+    {/* 1. Header Area: Only for ID and Status */}
+    <div className='p-4 border-b flex justify-between items-center bg-slate-50/50'>
+      <div className='flex items-center gap-2 font-medium'>
+        <ShoppingBag className='w-4 h-4 text-slate-600' />
+        Order #{order.id.slice(-6).toUpperCase()}
+      </div>
+      <span
+        className={cn(
+          'px-3 py-1 rounded-full text-xs font-bold border',
+          statusStyles[order.status]
+        )}
+      >
+        {order.status}
+      </span>
+    </div>
 
-        {/* Render Standard Orders */}
-        {standardOrders.map((order: any) => (
-          <div
-            key={order.id}
-            className='bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm'
-          >
-            <div className='p-4 border-b flex justify-between items-center'>
-              <div className='flex items-center gap-2 font-medium'>
-                <ShoppingBag className='w-4 h-4 text-slate-600' />
-                Order #{order.id.slice(-6).toUpperCase()}
-              </div>
-              <span
-                className={cn(
-                  'px-3 py-1 rounded-full text-xs font-bold border',
-                  statusStyles[order.status]
-                )}
-              >
-                {order.status}
-              </span>
+    {/* 2. Body Area: THIS IS WHERE THE ITEMS SHOULD GO */}
+    <div className='p-6'>
+      <ul className='space-y-3'>
+        {order.items.map((item: any) => (
+          <li key={item.id} className='flex justify-between items-center text-sm'>
+            <div className='text-slate-700'>
+              <span className='font-medium'>{item.product?.name || 'Cake'}</span>
+              <span className='ml-2 text-slate-400'>× {item.quantity}</span>
             </div>
-            <div className='p-6'>
-              <ul className='space-y-1'>
-                {order.items.map((item: any) => (
-                  <li key={item.id} className='text-sm text-slate-600'>
-                    {item.product.name}{' '}
-                    <span className='text-slate-400'>×{item.quantity}</span>
-                  </li>
-                ))}
-              </ul>
-              <div className='mt-4 pt-4 border-t flex justify-between items-center'>
-                <p className='text-slate-500 text-sm'>
-                  Ordered on {order.createdAt.toLocaleDateString()}
-                </p>
-                <p className='text-lg font-bold'>₹{order.total}</p>
-              </div>
-            </div>
-          </div>
+            <span className='text-slate-500'>₹{item.price * item.quantity}</span>
+          </li>
         ))}
-
+      </ul>
+      
+      <div className='mt-6 pt-4 border-t flex justify-between items-center'>
+        <div className='flex items-center gap-2 text-slate-500 text-sm'>
+          <Clock className='w-4 h-4' />
+          <span>{order.createdAt.toLocaleDateString()}</span>
+        </div>
+        <div className='text-right'>
+          <p className='text-xs text-slate-400 uppercase font-bold tracking-wider'>Total Amount</p>
+          <p className='text-xl font-bold text-slate-900'>₹{order.total}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+))}
         {customRequests.length === 0 && standardOrders.length === 0 && (
           <div className='text-center py-20 bg-white rounded-xl border border-dashed'>
             <p className='text-slate-500'>No orders found in this category.</p>
