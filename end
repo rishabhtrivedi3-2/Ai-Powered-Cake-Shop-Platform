@@ -1,0 +1,107 @@
+[33mcommit 6d0f9f869358807ffe17b060066ce2b61b1d437c[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m
+Author: rishabhtrivedi3-2 <trivedirishabh27@gmail.com>
+Date:   Fri Jan 23 03:45:51 2026 +0530
+
+    orderstab
+
+[33mcommit 66da8b3ecba5aa48ac187f3f2877c13c43a9c892[m
+Author: rishabhtrivedi3-2 <trivedirishabh27@gmail.com>
+Date:   Thu Jan 22 03:23:55 2026 +0530
+
+    prisma client
+
+[33mcommit d87b5114cfc44d69cfe19f5e3ddac9821710c71e[m
+Author: rishabhtrivedi3-2 <trivedirishabh27@gmail.com>
+Date:   Thu Jan 22 02:39:30 2026 +0530
+
+    schema commit
+
+[33mcommit e9e7da3dce4ba29f59944fec2999ea27c73460dd[m
+Author: rishabhtrivedi3-2 <trivedirishabh27@gmail.com>
+Date:   Wed Jan 21 03:55:17 2026 +0530
+
+    prismaclient
+
+[33mcommit 6d84b42c7354703a49fbaa3e9d848925cd55d99a[m
+Author: rishabhtrivedi3-2 <trivedirishabh27@gmail.com>
+Date:   Wed Jan 21 03:40:26 2026 +0530
+
+    prisma
+
+[33mcommit c78188066dde80a8ce68a6dfa635a2349f1f48b9[m
+Author: rishabhtrivedi3-2 <trivedirishabh27@gmail.com>
+Date:   Wed Jan 21 03:18:11 2026 +0530
+
+    prisma error
+
+[33mcommit f45296d1c097f0c854c96070a392ddbd026930be[m
+Author: rishabhtrivedi3-2 <trivedirishabh27@gmail.com>
+Date:   Wed Jan 21 02:47:37 2026 +0530
+
+    prisma error
+
+[33mcommit 7a6394225b85712bc57431441f0c7075ac8d690b[m[33m ([m[1;31morigin/master[m[33m, [m[1;32mmaster[m[33m)[m
+Author: rishabhtrivedi3-2 <trivedirishabh27@gmail.com>
+Date:   Wed Jan 21 02:04:42 2026 +0530
+
+    fix: downgrade to Node 20 for Vercel
+
+[33mcommit 72bdfb8cafe0d75e33d17ba27ece23b729a3421b[m
+Author: rishabhtrivedi3-2 <trivedirishabh27@gmail.com>
+Date:   Tue Jan 20 03:05:39 2026 +0530
+
+    fix: vercel build node + swc + bcrypt
+
+[33mcommit 4e3579ac2498f568dcf3ccb8768b4d89b6e6db4a[m
+Author: rishabhtrivedi3-2 <trivedirishabh27@gmail.com>
+Date:   Tue Jan 20 02:58:39 2026 +0530
+
+    fix: vercel build node + swc + bcrypt
+
+[33mcommit 6a9a2e1406d9420ca0347f471da14e90fe6512a1[m
+Author: rishabhtrivedi3-2 <trivedirishabh27@gmail.com>
+Date:   Tue Jan 20 02:39:49 2026 +0530
+
+    fix: patch missing swc deps for deployment
+
+[33mcommit c1ff0595d95547723a03894312f42847cda5cfb8[m
+Author: rishabhtrivedi3-2 <trivedirishabh27@gmail.com>
+Date:   Tue Jan 20 02:28:20 2026 +0530
+
+    fix: patch missing swc deps for deployment
+
+[33mcommit a5284db26f4bb199e974fa257e31ed2e4887a648[m
+Author: rishabhtrivedi3-2 <trivedirishabh27@gmail.com>
+Date:   Tue Jan 20 02:25:23 2026 +0530
+
+    fix: patch missing swc deps for deployment
+
+[33mcommit dc936c9659056af3d55ea3f54f863407eed2ecf9[m
+Author: rishabhtrivedi3-2 <trivedirishabh27@gmail.com>
+Date:   Tue Jan 20 02:06:39 2026 +0530
+
+    builde commit
+
+[33mcommit 619a98d22619632691efbb05d9ececda8b9fc09a[m
+Author: rishabhtrivedi3-2 <trivedirishabh27@gmail.com>
+Date:   Tue Jan 20 01:55:57 2026 +0530
+
+    build commit
+
+[33mcommit f31bc895f9eb46617ce5f9f9371cca43bc476b9f[m
+Author: rishabhtrivedi3-2 <trivedirishabh27@gmail.com>
+Date:   Mon Jan 19 04:23:41 2026 +0530
+
+    crud commmit
+
+[33mcommit c6accbe16b1fa23e23efe1ca53861570a3d2000e[m
+Author: rishabhtrivedi3-2 <trivedirishabh27@gmail.com>
+Date:   Wed Jan 14 00:25:13 2026 +0530
+
+    ai commit
+
+[33mcommit aec6840a292370ee9cfc25dd7f4c1990937911e5[m
+Author: rishabhtrivedi3-2 <trivedirishabh27@gmail.com>
+Date:   Thu Jan 8 00:52:51 2026 +0530
+
+    Initial commit: Cake shop e-commerce app with authentication and Prisma ORM
